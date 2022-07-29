@@ -1,0 +1,15 @@
+---
+title: "IMDB Ratings EDA"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+ratings <- read.csv("https://raw.githubusercontent.com/n0rdp0l/python_projects/master/IMDB/Ratings.csv")
+voters <- read.csv("https://raw.githubusercontent.com/n0rdp0l/python_projects/master/IMDB/Number_of_Voters.csv")
+```
+
