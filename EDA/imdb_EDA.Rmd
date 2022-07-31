@@ -7,9 +7,15 @@ date: "`r Sys.Date()`"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
+# Data Importing & Cleaning
 ```{r}
+#importing
 ratings <- read.csv("https://raw.githubusercontent.com/n0rdp0l/python_projects/master/IMDB/Ratings.csv")
 voters <- read.csv("https://raw.githubusercontent.com/n0rdp0l/python_projects/master/IMDB/Number_of_Voters.csv")
+```
+```{r}
+#cleaning
+colnames(ratings) <- c("name",'all', 'sub18', '18-29', '30-44', '44+', 'all_m', 'sub18_m', '18-29_m', '30-44_m', '44+_m', 'all_f', 'sub18_f', '18-29_f', '30-44_f', '44+_f', 'top_1000', 'US', 'non_US')
+colnames(voters) <- c("name",'all', 'sub18', '18-29', '30-44', '44+', 'all_m', 'sub18_m', '18-29_m', '30-44_m', '44+_m', 'all_f', 'sub18_f', '18-29_f', '30-44_f', '44+_f', 'top_1000', 'US', 'non_US')
 ```
 
