@@ -7,6 +7,11 @@ date: "`r Sys.Date()`"
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+```{r}
+library(ggpubr)
+library(dplyr)
+```
+
 # Data Importing & Cleaning
 ```{r}
 #importing
@@ -17,5 +22,46 @@ voters <- read.csv("https://raw.githubusercontent.com/n0rdp0l/python_projects/ma
 #cleaning
 colnames(ratings) <- c("name",'all', 'sub18', '18-29', '30-44', '44+', 'all_m', 'sub18_m', '18-29_m', '30-44_m', '44+_m', 'all_f', 'sub18_f', '18-29_f', '30-44_f', '44+_f', 'top_1000', 'US', 'non_US')
 colnames(voters) <- c("name",'all', 'sub18', '18-29', '30-44', '44+', 'all_m', 'sub18_m', '18-29_m', '30-44_m', '44+_m', 'all_f', 'sub18_f', '18-29_f', '30-44_f', '44+_f', 'top_1000', 'US', 'non_US')
+```
+
+# EDA
+## Gender Discrepancies
+```{r}
+discrepancies <- data.frame(matrix(ncol = 6, nrow = 250))
+colnames(discrepancies) <- c("name",'all', 'sub18', '18-29', '30-44', '44+')
+
+for (i in 1:dim(ratings)[1]){
+  discrepancies[i,1] <- ratings[i,1]
+  discrepancies[i,2] <- ratings[i,7] - ratings[i,12]
+  discrepancies[i,3] <- ratings[i,8] - ratings[i,13]
+  discrepancies[i,4] <- ratings[i,9] - ratings[i,14]
+  discrepancies[i,5] <- ratings[i,10] - ratings[i,15]
+  discrepancies[i,6] <- ratings[i,11] - ratings[i,16]
+}
+discrepancies
+```
+```{r}
+top_10 <- bind_rows(
+
+discrepancies %>%
+slice_min(all, n = 10, with_ties = F)%>%
+mutate(preference = "female"),
+
+discrepancies %>%
+slice_max(all, n = 10, with_ties = F)%>%
+mutate(preference = "male")
+)
+
+ggbarplot(top_10, x = "name", y = "all",
+          fill = "preference",           # change fill color by mpg_level
+          color = "white",            # Set bar border colors to white
+          palette = "jco",            # jco journal color palett. see ?ggpar
+          sort.val = "asc",           # Sort the value in ascending order
+          x.text.angle = 90,          # Rotate vertically x axis texts
+          ylab = "rating differences",
+          legend.title = "preference",
+          lab.size = 0.20,
+          rotate = TRUE
+          )
 ```
 
