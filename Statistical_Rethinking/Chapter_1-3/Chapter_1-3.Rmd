@@ -1,0 +1,70 @@
+---
+title: "Chapter_1-3"
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    code_folding: "hide"
+---
+
+## 2.3
+
+### Binomial Function
+
+$$\mathrm{Pr}(W,L \mid p) = \frac{(W+L)!}{W!L!}p^W(1-p)^L$$
+
+The formula can be read as:
+
+|     *The counts of "water" W and "land" L follow a binomial distribution with probability p of "water" on each toss.*
+\
+
+R-code:
+```{r eval=FALSE, class.source="bg-info", results='hide'}
+dbinom(W, W+L, p)
+```
+
+Posterior:
+
+$$\mathrm{Pr}(p \mid W,L) = \frac{\mathrm{Pr}(W,L \mid p)\mathrm{Pr}(p)}{\mathrm{Pr}(W,L)}$$
+
+|    *Relative plausibility of each possible p after learning W,L*
+\
+
+### Grid Approximation {.tabset}
+
+#### Grid
+```{r}
+p_grid <- seq(from = 0, to = 1, len = 100) # initialize 100 p values
+plot(p_grid, bty = "l")
+```
+
+#### Prior
+```{r}
+prior_p <- rep(1, 100) # non informative prior probability (flat prior)
+prior_p_water <- dbeta(p_grid, 3, 1) # prior believing water is more likely
+plot(prior_p_water,bty = "l", pch = 16)
+points(prior_p)
+```
+
+#### $\mathrm{Pr}(W,L \mid p)$
+```{r}
+prob_data <- dbinom(6, 9, prob = p_grid) # probability of our data
+plot(prob_data, bty = "l")
+```
+
+#### inizialise Posterior
+```{r}
+posterior <- prob_data * prior_p # multiply Pr(W,L|p) by Pr(p)
+posterior_water <- prob_data * prior_p_water
+plot(posterior_water, bty = "l", pch = 16)
+points(posterior)
+```
+
+#### normalize Posterior (AUC = 1)
+```{r}
+posterior <- posterior / sum(posterior)# normalize
+posterior_water <- posterior_water / sum(posterior_water)
+plot(posterior_water, bty = "l", pch = 16)
+points(posterior)
+```
+
+
